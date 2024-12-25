@@ -18,7 +18,6 @@ router = APIRouter(
 async def get_bookings(
         user: Users = Depends(get_current_user)
 ) -> list[SBooking]:
-    # print(user, type(user),user.id, user.email, user.hashed_password )
     return await BookingService.find_all(user_id=user.id)
 
 

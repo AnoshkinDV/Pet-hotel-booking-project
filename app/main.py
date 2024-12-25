@@ -1,73 +1,44 @@
-
 from fastapi import FastAPI, Query
 from typing import Optional
 from datetime import date
-
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-
 
 from app.user.router import router as router_users
 from app.booking.router import router as router_bookings
 from app.hotels.router import router as router_hotels
 from app.hotels.rooms.router import router as router_rooms
-# @app.get("/hotels/{hotel_id}")
-# def get_hotels(hotel_id: int, date_from, date_to):
-#     return hotel_id,date_from, date_to
+from app.pages.router import router as router_pages
+from app.images.router import router as router_images
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="app/static"), "static")
+# StatiFiles это отдельное приложение
 
 app.include_router(router_users)
 app.include_router(router_bookings)
 app.include_router(router_hotels)
 app.include_router(router_rooms)
+app.include_router(router_pages)
+app.include_router(router_images)
 
+# Добавление площадок, которые могут обращаться к нашему api
+origins = [
+    "http://localhost:8080"
+]
+#"https://api.mysite.com"
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,  # Отвечает за куки,и если тру то с каждым запросом посылается кука
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"], #Какие методы мы можем использовать
+    allow_headers=["Content-Type","Set-Cookie","Access-Control-Allow-Headers",
+                   "Access-Control-Allow-Origin",
+                   "Authorization"],
+)
 
-class HotelaSearchArgs:
-    def __init__(
-            self,
-            location: str,
-            date_from: date,
-            date_to: date,
-            has_spa: Optional[bool] = None,
-            stars: Optional[int] = Query(None, ge=1, le=5)
-    ):
-        self.location = location
-        self.date_from = date_from
-        self.date_to = date_to
-        self.has_spa = has_spa
-        self.stars = stars
-
-
-class SHotel(BaseModel):
-    adress: str
-    name: str
-    stars: Optional[int] = Field(None, ge=1, le=5)
-
-
-# @app.get("/hotels")
-# def get_hotels(
-#         location: str,
-#         date_from: date,
-#         date_to: date,
-#         has_spa: Optional[bool] = None,
-#         stars: Optional[int] = Query(None, ge=1, le=5)
-# ) -> list[SHotel]:
-#     hotels = [
-#         {
-#             "adress": "ул.Васенко, 2, Саранск",
-#             "name": "Bad Hotel",
-#             "stars": 1,
-#
-#         },
-#     ]
-#     return hotels
-
-# @app.get("/hotels")
-# def get_hotels(
-#   search_args: HotelaSearchArgs = Depends()
-# ):
-#     return search_args
 
 # uvicorn app.main:app --reload
-
-

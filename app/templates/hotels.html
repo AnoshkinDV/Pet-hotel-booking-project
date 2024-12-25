@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input, .search-bar button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .search-bar button {
+            background-color: #ffc107;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .search-bar button:hover {
+            background-color: #e0a800;
+        }
+        .navigation {
+            display: flex;
+            gap: 15px;
+        }
+        .navigation a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .hotel {
+            display: flex;
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .hotel img {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .hotel-info {
+            margin-left: 20px;
+            flex: 1;
+        }
+        .hotel-info h1 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+        .hotel-info h4 {
+            margin: 0 0 10px;
+            color: #666;
+        }
+        .hotel-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .hotel-info .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #ffc107;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .hotel-info .btn:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="search-bar">
+        <input type="text" placeholder="Локация" />
+        <label>С <input type="date" /></label>
+        <label>По <input type="date" /></label>
+        <button>Найти</button>
+    </div>
+    <div class="navigation">
+        <a href="/pages/my-bookings">Мои брони</a>
+        <a href="/pages/login">Войти</a>
+    </div>
+</div>
+<div class="container">
+    {% for hotel in hotels %}
+    <div class="hotel">
+        <img src="{{ url_for('static', path='images/' + hotel.image_id|string + '.webp') }}" alt="Фото отеля">
+        <div class="hotel-info">
+            <h1>{{ hotel.name }}</h1>
+            <h4>{{ hotel.location }}</h4>
+            <p>Услуги: {{ hotel.services | join(', ') }}</p>
+            <a href="/pages/hotels/{{ hotel.id }}/rooms?date_from={{ date_from }}&date_to={{ date_to }}" class="btn">Выбрать номер</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>

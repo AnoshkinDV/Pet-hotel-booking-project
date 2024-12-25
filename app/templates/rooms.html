@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список номеров</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .room {
+            display: flex;
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .room img {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .room-info {
+            margin-left: 20px;
+            flex: 1;
+        }
+        .room-info h2 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+        .room-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .room-info .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #ffc107;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .room-info .btn:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Список номеров</h1>
+    {% for room in rooms %}
+    <div class="room">
+        <img src="{{ url_for('static', path='images/' + room.image_id|string + '.webp') }}" alt="Фото номера">
+        <div class="room-info">
+            <h2>{{ room.name }}</h2>
+            <p>Цена: {{ room.price }} ₽/ночь</p>
+            <p>Описание: {{ room.description }}</p>
+            <a href="/pages/booking/{{ room.id }}" class="btn">Забронировать</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
