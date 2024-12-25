@@ -14,8 +14,6 @@ from app.images.router import router as router_images
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-
-
 from redis import asyncio as aioredis
 
 app = FastAPI()
@@ -46,6 +44,10 @@ app.add_middleware(
                    "Authorization"],
 )
 
+
+
+#1ое событие startup - отвечает за запуск приложения, те при запуске приложения функция startup прогонятся
+#2ое собитие shutdown - отвечает за выключение приложения
 
 @app.on_event("startup")
 def startup():
