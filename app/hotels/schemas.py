@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel, Json, ConfigDict
 
 
@@ -5,7 +7,7 @@ class SHotels(BaseModel):
     id: int
     name: str
     location: str
-    # services: list[Json[str, str]]
+    services: List[str]
     rooms_quantity: int
     image_id: int
     rooms_left: int

@@ -74,8 +74,8 @@ class HotelsService(BaseService):
             # такую структуру данных. То есть проблема кроется именно в парсинге ответа алхимии
             # Пайдентиком.
             select(
-                Hotels.__table__.columns,
-                booked_hotels.c.rooms_left,
+                Hotels.__table__.columns, # Все колонки таблицы Hotels
+                booked_hotels.c.rooms_left, # Доп. колонка с количеством комнат
             )
             .join(booked_hotels, booked_hotels.c.hotel_id == Hotels.id, isouter=True)
             .where(

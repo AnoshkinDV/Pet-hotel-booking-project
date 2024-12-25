@@ -1,5 +1,6 @@
 from datetime import date
 
+from fastapi import HTTPException
 from fastapi.logger import logger
 from sqlalchemy import select, and_, or_, func, insert, delete
 
