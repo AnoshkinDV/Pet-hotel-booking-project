@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from pydantic import parse_obj_as
 from app.booking.service import BookingService
 from app.booking.schemas import SBooking
@@ -25,12 +25,18 @@ async def get_bookings(
 
 @router.post("")
 async def add_booking(
+        background_tasks: BackgroundTasks,
         room_id: int, date_from: date, date_to: date,
         user: Users = Depends(get_current_user)
 ):
     new_booking = await BookingService.add(user.id, room_id, date_from, date_to)
     parse_new_booking = parse_obj_as(SBooking, new_booking).dict()
-    send_booking_confirmation_email.delay(parse_new_booking, user.email)
+
+    # Вариант с celery
+    # send_booking_confirmation_email.delay(parse_new_booking, user.email)
+    # Вариант встроенный background_tasks
+    background_tasks.add_task(
+        send_booking_confirmation_email, parse_new_booking, user.email)
     if not new_booking:
         raise RoomCannotBeBooked
     return parse_new_booking

@@ -24,7 +24,7 @@ def process_pic(
         f"app/static/images/resized_200_100_{im_path.name}")
 
 
-@celery_app.task
+# @celery_app.task
 def send_booking_confirmation_email(
     booking: dict,
     email_to: EmailStr,
