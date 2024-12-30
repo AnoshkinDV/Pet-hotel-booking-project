@@ -3,3 +3,4 @@ venv
 .idea
 *.sql
 __pycache__/
+test_function.py

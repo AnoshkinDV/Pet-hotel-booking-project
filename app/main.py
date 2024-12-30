@@ -5,6 +5,7 @@ from typing import AsyncIterator
 
 from fastapi.staticfiles import StaticFiles
 
+from app.config import settings
 from app.user.router import router as router_users
 from app.booking.router import router as router_bookings
 from app.hotels.router import router as router_hotels
@@ -51,7 +52,7 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup():
-    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 # uvicorn app.main:app --reload
