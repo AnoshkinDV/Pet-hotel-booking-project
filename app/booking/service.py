@@ -1,7 +1,6 @@
 from datetime import date
 
 from fastapi import HTTPException
-from fastapi.logger import logger
 from sqlalchemy import select, and_, or_, func, insert, delete
 
 from app.datebase import async_session_maker, engine
@@ -39,7 +38,8 @@ class BookingService(BaseService):
                 )
             ).cte("booked_rooms")
             get_quantity_free_rooms = select(
-                (Rooms.quantity - func.count(booked_rooms.c.room_id)).label("quantity_free_rooms")
+                (Rooms.quantity - func.count(booked_rooms.c.room_id)
+                 ).label("quantity_free_rooms")
             ).select_from(Rooms).join(
                 booked_rooms, booked_rooms.c.room_id == Rooms.id, isouter=True
             ).where(Rooms.id == room_id).group_by(
@@ -55,7 +55,8 @@ class BookingService(BaseService):
             if quantity_free_rooms != 0:
                 get_price = select(Rooms.price).where(Rooms.id == room_id)
                 price_per_room = await session.execute(get_price)
-                price_per_room: int = price_per_room.scalar()  # собираем скаляр, который используется для извлечения
+                # собираем скаляр, который используется для извлечения
+                price_per_room: int = price_per_room.scalar()
                 # первого значения из рез-та запроса
                 add_booking = insert(Bookings).values(
                     room_id=room_id,
@@ -87,4 +88,5 @@ class BookingService(BaseService):
 
             # Проверяем, была ли запись удалена
             if result.rowcount == 0:
-                raise HTTPException(status_code=404, detail="Booking not found")
+                raise HTTPException(
+                    status_code=404, detail="Booking not found")
